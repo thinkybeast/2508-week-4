@@ -1,0 +1,139 @@
+{{#info}}
+
+This document describes how to configure and use ESLint version 9.33.0. An [earlier version of this document](https://launchschool.com/gists/9ad96eed) recommended version 7.13.1. There have been major incompatible changes to ESLint in the interim. **If you already have version 7.13.1 installed and it is working, we recommend sticking with that version.** Please refer to [this gist](https://launchschool.com/gists/9ad96eed).
+
+{{/info}}
+
+## ESLint
+
+[ESLint](https://eslint.org/) is a static code analyzer for JavaScript; it analyzes your code and offers advice about style, format, coding practices, possible errors, and other problems. Using ESLint will help you adhere to the rules of your preferred style guide. It's a modular framework that uses a pluggable architecture to insert enforcement rules.
+
+### Linting and Best Practices
+
+ESLint is what developers call a **linter**. Linters inspect your code for potential errors and "code smells," and for adherence to the best practice determined by developers over the years. Linting isn't foolproof, but it can serve as the first line of defense against some of the most common pitfalls in a language (and JavaScript has its share of those). For instance, the configuration we use disallows using assignments as a conditional expression in an `if` statement:
+
+```js
+if (result = someFunction()) { // this is legal, but might be a mistake!
+  ...
+}
+```
+
+Some of the most crucial rules in the best practice category apply to function length and complexity. A function that has many lines of code or that has complicated logic can be difficult to understand, maintain, and update. Our ESLint configuration defines generous limits for the rules that check for length and complexity. In most cases, the complaints that ESLint issues in this area are a strong indication that your code leaves room for improvement. You should strive to simplify and shorten your code when you see these complaints. You may decide you don't need to fix something, but it's worth giving every such complaint due consideration. In the long run, try to write simpler code and use smaller functions; it will improve your code quality.
+
+### Installing and Configuring ESLint
+
+ESLint is a Node package, so you install it like any other Node package. While it is possible to install it globally (with the `-g` option), the ESLint team does not recommend it; in many cases, you will want to use different ESLint versions with different programs. Therefore, you should install ESLint and all related packages locally as a development dependency:
+
+```terminal
+$ npm install --save-dev eslint@9.33.0 
+```
+
+Once you've successfully installed ESLint, you should have an `eslint` command available from the command line. Check that your system finds the correct version:
+
+```terminal
+$ npx eslint -v
+v9.33.0
+```
+
+The `eslint` command takes a JavaScript file (or files) as an argument. For example, if you have a JavaScript file called `test.js`, you can run ESLint against the file like this:
+
+```terminal
+$ npx eslint test.js  # We don't have a `test.js` file, so this code won't work
+```
+
+### Quick Tutorial
+
+With configuration out of the way, we're ready to see ESLint in action with a simple program. Create a file, and name it `hello.js`. The contents of this file should contain a single line:
+
+```js file="hello.js"
+console.log(helloWorld)
+```
+
+Now, run ESLint on this file.
+
+```terminal
+$ npx eslint hello.js
+
+/Users/wolfy/hello.js
+
+  1:13  error  'helloWorld' is not defined  no-undef
+  1:24  error  Missing semicolon            semi
+
+✖ 2 problems (2 errors, 0 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+```
+
+The output you see may be different -- don't worry if it is.
+
+Let's break it down a bit:
+
+-   The first non-blank line tells you the full path name of the file that ESLint checked.
+-   The next two lines show the two errors that ESLint found in the code. The first error involves an undefined `helloWorld` variable at line 1, column 13. The second error shows a missing semi-colon on line 1, column 24.
+-   The two error lines also show the names of the rules that apply to those errors: here, the `no-undef` and `semi` rules. You can read about a specific rule by searching Google for "eslint" and the name of the rule. For instance, searching for "eslint semi" returns a link to the documentation for the "semi" rule. The documentation describes the rule and almost always shows a variety of different situations in which code triggers the rule, and also shows you code that doesn't trigger it. That's usually all you need to figure out how to fix the problem.
+-   Finally, the last 2 lines report some simple statistics about what ESLint found: 2 separate problems, both of which it classified as errors instead of warnings. It also says that you can fix one of the problems by running `eslint --fix hello.js` -- that's a quick and dirty way to fix a lot of small problems, but it's possible that some fixes may not work, so be careful.
+
+### Using ESLint With Your Editor
+
+ESLint is available in most code editors as a plugin. Using a plugin is the most convenient way to use it -- you can easily configure your editor to run ESLint automatically, either as you type or when you save or open a file. If your editor allows plugins, don't forget to search the plugins for one that lets you integrate ESLint into your workflow. The plugin needs to be smart enough to handle a local installation of ESLint or it won't work.
+
+For Visual Studio Code (VSCode), we recommend installing the "ESLint" extension.
+
+FAQs
+
+Is there a time limit to finishing Core?
+No, not exactly. We've had Capstone participants finish Core in under 6 months to those who spent over 3 years. The main attributes we're looking for is readiness for Capstone, which includes technical mastery, strong communication ability, professional presence, empathy for others, and a readiness to perform. For example everything else being equal, we would rather admit someone who spent a long time in Core with excellent assessment feedback over someone who rushed through Core with mediocre to low performance. However, if the duration is very long, we might ask you to retake some assessments just to make sure the topics are fresh in your mind. So while there's no hard time limit, we need to be convinced that you are ready for Capstone.
+
+When does each Capstone cohort start?
+There are two Capstone cohorts a year: Spring and Fall. The Spring cohort typically starts early March while the Fall cohort starts late August. The cohort finalizes a few months before the start date, so Capstone participants must finish the Core Curriculum at least 6-8 weeks before the cohort start date in order to make time for the Capstone preparatory work.
+
+Is it possible to work full-time or part-time during Capstone?
+No, this would not be possible. The Capstone Program requires full-time attention. If you do have extra time, we would prefer that it is used to take a break and rest. When you join Capstone, you're very close to breaking through to a great engineering-centric job. Keeping a laser-focus on this goal will help make that happen within a few months. Having a low or medium-paying job, full-time or part-time could pose as a distraction from this goal.
+
+What topics are taught or covered in the Capstone program?
+Capstone will cover all relevant topics that top employers demand, including the following (not a comprehensive list):
+
+AI Engineering fundamentals
+Databases (nosql, rdbms) & Database Design
+Full-stack Development and Frameworks
+Cloud Infrastructure
+Agile Team-based Development
+Software Architecture & System Design
+Distributed Systems
+Service Oriented Architectures
+
+What if I don’t reside in the US?
+While we have a strong preference for US-based residents, we have made exceptions for Capstone participants from Canada, UK, Australia, China, and India. Exceptions heavily depend on your Core Curriculum performance. If you do well, there's a strong likelihood that we will make an exception for you in Capstone— no matter where you live.
+
+That said, Capstone is synchronous and we expect people to be available approximately 8am - 5pm US Pacific time. This requirement can result in very odd hours over the 16 week period. The Capstone fee also remains the same (minimum fee of $18k USD). Non-US salaries are much lower than US software engineering salaries, so you must decide if it is worth your time and monetary investment.
+
+Further, we have less graduate data to share so expected results can vary. We've had several Capstone graduates in Toronto and London, but have limited data for other cities. If you still choose to participate in Capstone, it is likely we will not be able to determine your post-Capstone salary.
+
+Although we do not have concrete Capstone data for all countries, generally speaking Capstone graduates are able to get offers similar to that of good undergraduate CS programs in your locale.
+
+What We Can't Do
+
+We won't be able to work with US/Canadian residents who wish to travel the world or live elsewhere as companies are not going to accept that. Even remote roles have boundaries, especially when it comes to intellectual property issues.
+We can't help with visa issues. You must only job hunt in the country in which you can legally work. For example, if you are not a US citizen, you cannot use Capstone to try to get a job in the US.
+If you don't reside in the US, we can't target US companies with remote jobs. You must job hunt in the country where you can legally work and target local companies.
+
+Do I need to participate in Capstone to get a job?
+You probably do not need Capstone to get just any programming job, but it depends on a lot of factors - such as your location, prior work history, charisma, compensation demands, etc. However, the goal of the Capstone program is to maximize your time and energy to get the best job possible and kickstart your software engineering career. See this article on Avoiding the Career Transition Gap for some context about Capstone's goal.
+
+How long is Capstone?
+The scheduled Capstone coursework is 16 weeks. We also advise students to expect a 1-3+ month career search process after the coursework. The total Capstone duration is 5 to 7+ months. It could also take longer, so you do have to prepare for that.
+
+How does Capstone Mentoring differ from the one-on-one mentoring in other programs?
+In most one-on-one mentoring programs, you're assigned a mentor who will work with you one on one through fundamentals. While this is helpful, we believe that walking you through the fundamentals is not the best use of a mentor's time. This part of the learning phase we call “the plateau”, is often lengthy and circular, spreading out over months or years. Hiring a mentor could be a valid choice, however our pedagogy uses Mastery-based Learning through fundamentals prior to Capstone.
+
+Effort and practice are more important while learning fundamentals than high-level guidance. Most other programs skip the fundamentals and have mentors work with you on projects too early. The knowledge gained through this process may not provide enough depth and instead can be tied to a language / framework. Our courses are staffed and supported by TAs, who help you get unstuck when you need it. We save instructor time until Capstone as that's where we believe the most impact can be made.
+
+I’ve been self-learning for some time, can I skip your courses and jump directly into the Capstone Program?
+No, it is not possible to skip courses. It is very important to have solid fundamentals before you start the Capstone program. We've been teaching people programming since 2012, and the number one mistake beginners make is attempting to learn more advanced topics without a solid understanding of the basics. Our curriculum is designed so that you'll have well-rounded skills when you finish, then if you want to take the Capstone program, you'll really fly. If you've been self-learning and feel you are ready, you may be able to go through our courses fast, and all you have to do to qualify for Capstone is excel in the assessments.
+
+Can I pay the Capstone fee over time?
+We will work with you on a payment schedule that fits your situation. For example, we can do payment plans up to 24 months and we won’t charge interest or any additional fees. For example, you could pay back a $18,000 Capstone fee with a $750/month payment for 24 months after you start collecting paychecks.
+
+Once I get a job, how do you ensure I pay the remainder of my Capstone tuition fees?
+To participate in Capstone, you'll need to sign a legally binding Income Sharing Agreement (ISA). Legal consequences aside, it is our hope after spending so much time with us and seeing the investment that we make in you, you will treat us fairly. If you're accepted into Capstone, that means we believe in you and are ready to put our trust in you.
+
+Launch School Women's Group would like to introduce a **Buddy System**, which is a peer-to-peer way to connect Women’s Group members (women and non-binary individuals) in Prep or any Launch School course. A **Buddy** helps **people who are looking for a Buddy** by sharing tips, resources, and recommendations on how to:     - connect with other Launch Schoolers; - find a study buddy; - stay on the path and continue studying. If you're in Prep or any course in the curriculum and **looking for a Buddy**, please feel free to register and we'll connect you with a register Buddy in the further courses than you are. It’s preferred that the Buddy be in the 110 course or further in the curriculum. ### How Does This Work? **Step 1**: Fill in a [**Buddy System Form**](https://docs.google.com/forms/d/e/1FAIpQLSewrRgzSX4BZvnWuO-CVJReTbQyhzORECz-l7q3H7CB5L24xw/viewform).   **Step 2**: As soon as you register, we will provide a person who needs a Buddy with a registered Buddy's Slack name to contact them.   **Step 3**: The Buddy shares knowledge about the tips, resources, and recommendations on how to be connected with other Launch Schoolers, how to find a study buddy, how to stay on the path, and how to continue studying. We would like to communicate that Buddy System is not curated by the Women’s Group, Launch School TAs, or Staff. We hope you will enjoy the time with Buddy System! Be sure to check out the [*#ls-womens-group*](https://launchschool.slack.com/archives/C1W5VBVSS) Slack channel to stay in the loop about these and other initiatives.
